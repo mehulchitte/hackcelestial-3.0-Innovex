@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}ResortOS Copilot{% endblock %}
+{% block body %}
+<div class="app-shell">{% include "sidebar.html" %}
+<main class="main copilot-page">
+  <div class="topbar">
+    <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+    <div><p class="eyebrow">RESORTOS COPILOT · GEMINI POWERED</p><h1>Your AI Guide</h1><p class="muted">Ask anything about ResortOS. Get step-by-step guidance, troubleshooting, ideas and practical answers in English, Hindi or Hinglish.</p></div>
+    <div class="topbar-actions"><span class="ai-badge copilot-online">● ONLINE</span></div>
+  </div>
+
+  <section class="copilot-hero">
+    <div class="copilot-orb">✦</div>
+    <div><span class="feature-kicker">YOUR RESORTOS AI GUIDE</span><h2>What can I help you solve?</h2><p>From understanding a dashboard feature to fixing a workflow or planning the next operational step, just explain the problem naturally.</p></div>
+  </section>
+
+  <section class="copilot-layout">
+    <div class="panel copilot-chat-panel">
+      <div class="panel-head"><div><p class="eyebrow">LIVE CONVERSATION</p><h3>ResortOS Copilot</h3></div><span class="simulation-badge">GEMINI POWERED</span></div>
+      <div id="copilotMessages" class="copilot-messages">
+        <div class="copilot-msg bot"><div class="copilot-avatar">✦</div><div><b>ResortOS Copilot</b><p>Hi {{current_user.name.split(" ")[0]}} 👋 Tell me what you're trying to do or what problem you're facing. I'll guide you step by step.</p></div></div>
+      </div>
+      <div class="copilot-suggestions">
+        <button onclick="copilotAsk('Explain how I should use ResortOS for my role.')">Guide me around ResortOS</button>
+        <button onclick="copilotAsk('I am facing a problem in ResortOS. Help me troubleshoot it step by step.')">Troubleshoot a problem</button>
+        <button onclick="copilotAsk('Give me practical ideas to improve resort operations using ResortOS.')">Improve operations</button>
+        <button onclick="copilotAsk('Explain the most important things I should check on my dashboard.')">What should I check?</button>
+      </div>
+      <form class="copilot-input" onsubmit="sendCopilot(event)">
+        <textarea id="copilotInput" rows="2" placeholder="Ask anything… e.g. How do I allocate an available room?" autocomplete="off"></textarea>
+        <button id="copilotSend" class="btn primary">Send ✦</button>
+      </form>
+      <div class="copilot-note">AI responses are guidance. Live operational changes are still handled by ResortOS workflows and authorized staff.</div>
+    </div>
+
+    <aside class="panel copilot-side">
+      <p class="eyebrow">WHAT IT CAN DO</p><h3>One assistant for everything</h3>
+      <div class="copilot-cap"><b>🧭 Guide</b><span>Explain screens, navigation and workflows.</span></div>
+      <div class="copilot-cap"><b>🛠 Troubleshoot</b><span>Help diagnose app and operational workflow problems.</span></div>
+      <div class="copilot-cap"><b>💡 Recommend</b><span>Suggest practical next steps and improvements.</span></div>
+      <div class="copilot-cap"><b>📚 Explain</b><span>Break complex resort concepts into simple steps.</span></div>
+      <div class="copilot-cap"><b>🌐 Understand Hinglish</b><span>Ask naturally without changing your language.</span></div>
+      <div class="copilot-role"><span>YOUR ROLE</span><b>{{current_user.role|title}}</b><small>Responses are tailored to your ResortOS role.</small></div>
+    </aside>
+  </section>
+</main></div>
+{% endblock %}
+{% block scripts %}<script>initCopilot();</script>{% endblock %}

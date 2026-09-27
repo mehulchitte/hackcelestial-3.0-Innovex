@@ -1,0 +1,25 @@
+ResortOS Hospitality Digital Twin Domain Corpus
+
+ResortOS is a hospitality operations platform. Its entities include rooms, bookings, guests, reception, housekeeping, maintenance, issues, work orders, tasks, inventory and management.
+
+Weather-driven effects:
+- Heavy rain can delay arrivals, increase housekeeping demand, increase water intrusion/plumbing risk and reduce outdoor movement.
+- Extreme heat increases HVAC load, cooling demand and maintenance risk.
+- Strong winds and storms can disrupt movement, events and outdoor activities and increase maintenance risk.
+- Weather changes can cascade from guest demand and movement into room availability, staffing workload and maintenance.
+
+Digital Twin output must describe simulated future states without changing live operational records. It should estimate demand, capacity, movement disruption, housekeeping workload, maintenance risk and uncertainty.
+
+Scenario examples:
+1. Rainfall intensity rises from 2 mm to 20 mm: movement disruption and housekeeping load increase; arrival delays become more likely.
+2. Temperature rises from 30 C to 42 C: HVAC demand and maintenance risk increase.
+3. Wind rises above 60 km/h: storm-related operational risk increases.
+
+Hospitality routing examples:
+- AC/electrical/plumbing failures -> Maintenance.
+- Cleaning/towels/linen -> Housekeeping.
+- Check-in, check-out, room allocation, payment -> Reception.
+- Security incidents -> Security.
+- Guest medical assistance -> Medical.
+
+The aligned model should respond in the context of hospitality operations and Digital Twin scenario analysis, using supplied ResortOS state and weather data and clearly distinguishing simulation from real actions.

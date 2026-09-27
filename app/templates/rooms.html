@@ -1,0 +1,98 @@
+{% extends "base.html" %}{% block title %}Rooms — ResortOS{% endblock %}
+{% block body %}
+<div class="app-shell">
+{% include "sidebar.html" %}
+<main class="main">
+  <div class="topbar">
+    <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+    <div><p class="eyebrow">RESORT INVENTORY</p><h1>Available Rooms</h1></div>
+  </div>
+
+  <form class="booking-search" method="get" action="/rooms">
+    <label>Where do you want to stay?
+      <select name="location">
+        <option value="">All locations</option>
+        {% for loc in locations %}<option value="{{loc}}" {% if filters.location==loc %}selected{% endif %}>{{loc}}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Check in<input type="date" name="check_in" id="checkIn" value="{{filters.check_in}}"></label>
+    <label>Check out<input type="date" name="check_out" id="checkOut" value="{{filters.check_out}}"></label>
+    <label>Guests<input type="number" name="guests" min="1" value="{{filters.guests or 2}}"></label>
+    <button class="btn primary" type="submit">Search Rooms</button>
+  </form>
+
+  <div class="rooms-layout">
+    <aside class="rooms-filters">
+      <form method="get" action="/rooms">
+        <input type="hidden" name="location" value="{{filters.location}}">
+        <input type="hidden" name="check_in" value="{{filters.check_in}}">
+        <input type="hidden" name="check_out" value="{{filters.check_out}}">
+        <input type="hidden" name="guests" value="{{filters.guests}}">
+        <input type="hidden" name="sort" value="{{filters.sort}}">
+        <div class="filter-block">
+          <h4>Room Type</h4>
+          {% for rt in room_type_options %}
+          <label class="check-option"><input type="checkbox" name="room_type" value="{{rt}}" {% if rt in filters.room_type %}checked{% endif %}> {{rt}}</label>
+          {% endfor %}
+        </div>
+        <div class="filter-block">
+          <h4>Price Range</h4>
+          <label class="filter-field">Minimum <span id="minPriceLabel">₹{{filters.min_price or 5000}}</span></label>
+          <input type="range" name="min_price" min="5000" max="30000" step="500" value="{{filters.min_price or 5000}}" oninput="minPriceLabel.textContent='₹'+this.value">
+          <label class="filter-field">Maximum <span id="maxPriceLabel">₹{{filters.max_price or 30000}}</span></label>
+          <input type="range" name="max_price" min="5000" max="30000" step="500" value="{{filters.max_price or 30000}}" oninput="maxPriceLabel.textContent='₹'+this.value">
+        </div>
+        <button class="btn primary wide" type="submit">Apply Filter</button>
+      </form>
+    </aside>
+
+    <section>
+      <div class="rooms-results-head">
+        <div><h2>{{rooms|length}} room{{'s' if rooms|length!=1 else ''}} available</h2><span class="muted">{{filters.location or 'All OceanView Resort locations'}}</span></div>
+        <form method="get" action="/rooms" id="sortForm">
+          <input type="hidden" name="location" value="{{filters.location}}">
+          <input type="hidden" name="check_in" value="{{filters.check_in}}">
+          <input type="hidden" name="check_out" value="{{filters.check_out}}">
+          <input type="hidden" name="guests" value="{{filters.guests}}">
+          <input type="hidden" name="min_price" value="{{filters.min_price}}">
+          <input type="hidden" name="max_price" value="{{filters.max_price}}">
+          {% for rt in filters.room_type %}<input type="hidden" name="room_type" value="{{rt}}">{% endfor %}
+          <select name="sort" onchange="sortForm.submit()" style="width:auto">
+            <option value="popular" {% if filters.sort=='popular' %}selected{% endif %}>Sort: Recommended</option>
+            <option value="price_asc" {% if filters.sort=='price_asc' %}selected{% endif %}>Price: Low to High</option>
+            <option value="price_desc" {% if filters.sort=='price_desc' %}selected{% endif %}>Price: High to Low</option>
+          </select>
+        </form>
+      </div>
+
+      <div class="room-list" id="roomGrid">
+        {% for r in rooms %}
+        <article class="room-list-card" data-type="{{r.room_type}}" data-search="{{r.room_type}} {{r.number}}">
+          <div class="room-image img-placeholder" data-image="{{r.image}}"><small class="status-badge {{r.status|lower|replace(' ','-')}}">{{r.status}}</small></div>
+          <div class="room-body">
+            <span class="room-location">{{r.location}}</span>
+            <div class="room-code">Room {{r.number}} · Floor {{r.floor}}</div>
+            <h3>{{r.room_type}}</h3>
+            <div class="room-meta">
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 8.2a3 3 0 1 1 0 5.9"/><path d="M14.5 20c0-2.6 1.8-4.8 4.2-5.6"/></svg> {{r.guests}} Guests</span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/><path d="M3 18v2M21 18v2"/><path d="M5 10V7a2 2 0 0 1 2-2h3v5"/></svg> {{r.beds}}</span>
+            </div>
+            <p>{{r.description}}</p>
+          </div>
+          <div class="room-list-price">
+            <b>₹{{"{:,.0f}".format(r.price)}}</b><small>per night</small>
+            {% if r.status in ['Available','Cleaning'] %}<button class="btn primary" onclick="openBooking({{r.id}},'{{r.room_type}}',{{r.price}})">Book Now</button>{% else %}<button class="btn disabled">Unavailable</button>{% endif %}
+          </div>
+        </article>
+        {% else %}
+        <div class="panel empty">No rooms match your filters. Try widening your search.</div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+</main>
+</div>
+
+<div class="modal" id="bookingModal"><div class="modal-card"><button class="modal-close" onclick="closeModal('bookingModal')">×</button><p class="eyebrow">RESERVE YOUR STAY</p><h2 id="bookingTitle">Book Room</h2><p id="bookingPrice" class="muted"></p><form onsubmit="submitBooking(event)"><input type="hidden" id="bookingRoomId"><div class="form-grid"><label>Check in<input id="modalCheckIn" type="date" required></label><label>Check out<input id="modalCheckOut" type="date" required></label><label>Guests<select id="bookingGuests"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></label></div><button class="btn primary wide">Confirm Booking</button></form></div></div>
+{% endblock %}
+{% block scripts %}<script>setupDates('modalCheckIn','modalCheckOut');</script>{% endblock %}

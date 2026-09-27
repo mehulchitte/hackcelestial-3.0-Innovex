@@ -1,0 +1,80 @@
+<aside class="sidebar" id="sidebar">
+  <div class="side-brand">
+    <a class="brand" href="/"><span class="brand-mark">✦</span><span>Resort<span>OS</span></span></a>
+    <button class="close-side" onclick="toggleSidebar()">×</button>
+  </div>
+  <div class="profile-mini">
+    <div class="avatar lg">{{current_user.name[:1]}}</div>
+    <div><b>{{current_user.name}}</b><span>{{current_user.role|title}}</span></div>
+  </div>
+  <nav class="side-nav">
+    <a href="/dashboard" class="{{'active' if request.path=='/dashboard' else ''}}">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9.5 21v-6.5h5V21"/></svg></span>
+      <span>Dashboard</span>
+    </a>
+    {% if current_user.role=='customer' %}
+    <a href="/rooms" class="{{'active' if request.path=='/rooms' else ''}}">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19v-7a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v7"/><path d="M3 19v2M21 19v2"/><path d="M3 13v-2a2 2 0 0 1 2-2h6"/><circle cx="7.5" cy="9.5" r="1.5"/></svg></span>
+      <span>Book a Room</span>
+    </a>
+    <a href="/bookings" class="{{'active' if request.path=='/bookings' else ''}}">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="16" rx="2.4"/><path d="M3.5 9.5h17M8 3v3M16 3v3"/><path d="M8 13.5h2M8 17h5"/></svg></span>
+      <span>My Bookings</span>
+    </a>
+    {% else %}
+
+    {% if current_user.role in ['owner','manager','admin'] %}
+    <a href="/staff" class="{{'active' if request.path=='/staff' else ''}}">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 20c0-3.3 2.5-5.5 5.5-5.5s5.5 2.2 5.5 5.5"/><circle cx="17.5" cy="8" r="2.3"/><path d="M15.7 14.8c2.7.3 4.8 2.3 4.8 5.2"/></svg></span>
+      <span>Staff &amp; Access</span>
+    </a>
+    {% endif %}
+    {% if current_user.role in ['reception','manager','owner','admin'] %}
+    <a href="/allocation" class="{{'active' if request.path=='/allocation' else ''}}">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="2.4"/><path d="M3.5 10.5h17"/><path d="M8 3.5v3M16 3.5v3"/><path d="M7.5 14.5h3v3h-3z"/></svg></span>
+      <span>Room Allocation</span>
+    </a>
+    {% endif %}
+    {% if current_user.role in ['customer','reception','housekeeping','maintenance','manager','owner','admin'] %}
+    <a href="/digital-twin" class="{{'active' if request.path=='/digital-twin' else ''}}">
+      <span class="nav-icon">✦</span><span>Weather Digital Twin <em class="nav-new">TASK 1</em></span>
+    </a>
+    {% endif %}
+    {% if current_user.role in ['customer','owner','manager','admin'] %}
+    <a href="/nugen" class="{{'active' if request.path=='/nugen' else ''}}">
+      <span class="nav-icon">N</span><span>Nugen Intelligence <em class="nav-new mandatory">TASK 2</em></span>
+    </a>
+    {% endif %}
+    <a href="/tasks" class="{{'active' if request.path=='/tasks' else ''}}">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M8 12.2l2.4 2.4L16.2 9"/></svg></span>
+      <span>Tasks &amp; Assignments</span>
+    </a>
+    {% if current_user.role=='customer' %}
+    <a href="/issues" class="{{'active' if request.path=='/issues' else ''}}">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 3 20h18L12 4z" stroke-linejoin="round"/><path d="M12 10.5v3.4"/><circle cx="12" cy="16.7" r=".9" fill="currentColor" stroke="none"/></svg></span>
+      <span>Issues</span>
+    </a>
+    {% endif %}
+    {% if current_user.role in ['owner','manager','admin'] %}
+    <a href="/reports" class="{{'active' if request.path=='/reports' else ''}}">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M11 20V4M18 20v-7"/><path d="M2.5 20h19"/></svg></span>
+      <span>Reports &amp; Analytics</span>
+    </a>
+    {% endif %}
+    {% endif %}
+    <a href="/copilot" class="{{'active' if request.path=='/copilot' else ''}}">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8 10h8M8 14h5"/><circle cx="17" cy="14" r="1" fill="currentColor" stroke="none"/></svg></span>
+      <span>ResortOS Copilot <em class="nav-new copilot-nav">AI</em></span>
+    </a>
+    <a href="/settings" class="{{'active' if request.path=='/settings' else ''}}">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.1"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l1.9-1.5-2-3.4-2.3.7a7.6 7.6 0 0 0-2.6-1.5L14 2h-4l-.4 2.3a7.6 7.6 0 0 0-2.6 1.5l-2.3-.7-2 3.4L4.6 10a7.6 7.6 0 0 0 0 3l-1.9 1.6 2 3.4 2.3-.7c.77.66 1.65 1.17 2.6 1.5L10 22h4l.4-2.3a7.6 7.6 0 0 0 2.6-1.5l2.3.7 2-3.4-1.9-1.6z"/></svg></span>
+      <span>Settings</span>
+    </a>
+  </nav>
+  <div class="side-bottom">
+    <a href="/logout">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H5.5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2H9"/><path d="M16 16l4-4-4-4"/><path d="M20 12H9"/></svg></span>
+      <span>Logout</span>
+    </a>
+  </div>
+</aside>

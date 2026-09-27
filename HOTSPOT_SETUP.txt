@@ -1,0 +1,37 @@
+RESORTOS - HOTSPOT SETUP
+=========================
+
+1. Connect BOTH laptops to the SAME phone hotspot.
+2. On the laptop containing this project, double-click:
+      start_hotspot.bat
+3. Keep the black terminal window open.
+4. It will print something like:
+      Network: http://192.168.137.25:5000
+5. On the OTHER laptop, open that exact Network URL in Chrome/Edge.
+
+IF THE OTHER LAPTOP SAYS "SITE CAN'T BE REACHED":
+---------------------------------------------------
+A) Check both laptops are on the SAME hotspot.
+B) On the server laptop run:
+      ipconfig
+   Find the IPv4 address of the Wi-Fi/mobile-hotspot adapter.
+C) From the other laptop, open:
+      http://SERVER-IP:5000
+D) Windows Firewall may be blocking Python. On the SERVER laptop,
+   when Windows asks for network access, allow Python on PRIVATE networks.
+
+If needed, temporarily test Windows Firewall only on a trusted private
+hotspot network, then turn it back on after the test.
+
+IMPORTANT:
+- SQLite is stored on the server laptop.
+- All laptops connected to the server see the same database/data.
+- Do NOT close the server laptop terminal while using the website.
+- Do NOT use 127.0.0.1 from the second laptop; use the Network URL printed by run.py.
+
+AI NOTE
+-------
+The /ai page works without an API key using local smart fallback logic. To enable real GenAI responses, create a .env file beside run.py:
+OPENAI_API_KEY=your_key_here
+OPENAI_MODEL=gpt-5.6-luna
+Never place the key in frontend JS.

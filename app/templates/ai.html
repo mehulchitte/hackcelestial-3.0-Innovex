@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}AI Intelligence — ResortOS{% endblock %}
+{% block body %}
+<div class="app-shell">{% include "sidebar.html" %}
+<main class="main ai-page">
+  <div class="topbar">
+    <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+    <div><p class="eyebrow">CUSTOMER AI</p><h1>ResortOS AI Intelligence</h1>
+    <p class="muted">Just type what you need. AI understands it, decides the next action and routes operational help.</p></div>
+  </div>
+
+  <section class="ai-hero scroll-pop show">
+    <div><span class="ai-orb">✦</span><div class="eyebrow">LIVE GENERATIVE AI</div>
+      <h2>Tell me anything about your stay.</h2>
+      <p>No forms. No department selection. Type naturally and ResortOS AI handles the request.</p>
+    </div>
+    <div class="ai-status"><span></span> AI Engine Ready</div>
+  </section>
+
+  <section class="ai-card ai-chat-card scroll-pop show">
+    <div class="ai-card-head"><div><p class="eyebrow">RESORTOS AI</p><h3>Your personal resort intelligence</h3></div><span class="ai-badge">GENAI</span></div>
+    <div id="aiMessages" class="ai-messages">
+      <div class="ai-msg bot"><b>ResortOS AI</b><span>Hi {{current_user.name.split(" ")[0]}}. Tell me what you need in your own words. I can answer questions, find live room availability, or create and route a resort request for you.</span></div>
+    </div>
+    <form class="ai-input" onsubmit="sendAIChat(event)">
+      <input id="aiInput" placeholder="Type anything… e.g. “My AC is not working in my room”" autocomplete="off">
+      <button class="btn primary">Send</button>
+    </form>
+    <div class="ai-live-note">AI may create a service request or issue when your message requires action. Management receives an audit notification automatically.</div>
+  </section>
+</main></div>
+{% endblock %}
+{% block scripts %}<script>initAIPage();</script>{% endblock %}

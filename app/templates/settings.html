@@ -1,0 +1,84 @@
+{% extends "base.html" %}{% block title %}Settings — ResortOS{% endblock %}
+{% block body %}
+<div class="app-shell">
+{% include "sidebar.html" %}
+<main class="main">
+  <div class="topbar">
+    <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+    <div><p class="eyebrow">ACCOUNT</p><h1>Settings</h1></div>
+  </div>
+
+  <div class="settings-grid">
+    <div class="panel settings-nav">
+      <button class="active" onclick="showSettingsTab('profile',this)">Profile</button>
+      {% if resort_settings %}
+      <button onclick="showSettingsTab('resort',this)">Resort Information</button>
+      <button onclick="showSettingsTab('access',this)">Users &amp; Roles</button>
+      {% endif %}
+      <button onclick="showSettingsTab('notifications',this)">Notifications</button>
+      <button onclick="showSettingsTab('security',this)">Security</button>
+    </div>
+
+    <div class="panel settings-form">
+
+      <div class="settings-panel" id="panel-profile">
+        <div class="panel-head"><div><h3>Your profile</h3><p class="muted">Personal details for your ResortOS account.</p></div></div>
+        <label>Full name<input id="profileName" value="{{current_user.name}}"></label>
+        <div class="form-grid">
+          <label>Email<input value="{{current_user.email}}" disabled></label>
+          <label>Phone<input id="profilePhone" value="{{current_user.phone or ''}}" placeholder="+91 98765 43210"></label>
+        </div>
+        <div class="settings-locked">🔒 Your email is your login ID and can't be changed here. Contact support if it needs to be updated.</div>
+        <div class="form-actions"><button class="btn primary" onclick="saveProfile()">Save Changes</button></div>
+      </div>
+
+      {% if resort_settings %}
+      <div class="settings-panel" id="panel-resort" style="display:none">
+        <div class="panel-head"><div><h3>Resort information</h3><p class="muted">Basic information shown across ResortOS. Visible to Owner, Manager and Admin only.</p></div></div>
+        <label>Resort name<input id="resortName" value="{{resort_settings.resort_name}}"></label>
+        <div class="form-grid">
+          <label>Email<input id="resortEmail" value="{{resort_settings.email}}"></label>
+          <label>Phone<input id="resortPhone" value="{{resort_settings.phone}}"></label>
+          <label>Timezone<select id="resortTimezone"><option {% if resort_settings.timezone=='Asia/Kolkata (IST)' %}selected{% endif %}>Asia/Kolkata (IST)</option></select></label>
+          <label>Currency<select id="resortCurrency"><option {% if resort_settings.currency=='INR — ₹' %}selected{% endif %}>INR — ₹</option></select></label>
+        </div>
+        <label>Address<textarea id="resortAddress" rows="3">{{resort_settings.address}}</textarea></label>
+        <div class="form-actions"><button class="btn primary" onclick="saveResortSettings()">Save Changes</button></div>
+      </div>
+
+      <div class="settings-panel" id="panel-access" style="display:none">
+        <div class="panel-head"><div><h3>Users &amp; Roles</h3><p class="muted">Manage staff accounts, roles and access from the Operations Center.</p></div></div>
+        <p class="muted" style="line-height:1.7;margin-bottom:16px">Adding staff, changing roles and revoking access all happen in one place so permissions stay consistent across ResortOS.</p>
+        <a class="btn primary" href="/operations">Open Access Control →</a>
+      </div>
+      {% endif %}
+
+      <div class="settings-panel" id="panel-notifications" style="display:none">
+        <div class="panel-head"><div><h3>Notifications</h3><p class="muted">Choose what you want to hear about.</p></div></div>
+        {% if current_user.role=='customer' %}
+        <div class="toggle-row"><div><b>Booking updates</b><small class="muted">Confirmations, changes and check-in reminders</small></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+        <div class="toggle-row"><div><b>Offers &amp; promotions</b><small class="muted">Seasonal offers and loyalty rewards</small></div><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+        <div class="toggle-row"><div><b>Concierge &amp; support</b><small class="muted">Replies to your requests and messages</small></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+        {% else %}
+        <div class="toggle-row"><div><b>Task assignments</b><small class="muted">When work is assigned to you</small></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+        <div class="toggle-row"><div><b>Issue alerts</b><small class="muted">New and escalated operational issues</small></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+        {% if resort_settings %}<div class="toggle-row"><div><b>Daily performance digest</b><small class="muted">A morning summary of resort activity</small></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>{% endif %}
+        {% endif %}
+        <div class="form-actions"><button class="btn primary" onclick="toast('Notification preferences saved')">Save Changes</button></div>
+      </div>
+
+      <div class="settings-panel" id="panel-security" style="display:none">
+        <div class="panel-head"><div><h3>Security</h3><p class="muted">Update your password to keep your account secure.</p></div></div>
+        <label>Current password<input id="currentPassword" type="password" placeholder="Enter current password"></label>
+        <div class="form-grid">
+          <label>New password<input id="newPassword" type="password" placeholder="At least 6 characters"></label>
+          <label>Confirm new password<input id="confirmPassword" type="password" placeholder="Re-enter new password"></label>
+        </div>
+        <div class="form-actions"><button class="btn primary" onclick="changeUserPassword()">Update Password</button></div>
+      </div>
+
+    </div>
+  </div>
+</main>
+</div>
+{% endblock %}
